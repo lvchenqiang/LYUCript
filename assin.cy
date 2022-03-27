@@ -3,19 +3,19 @@
 	var missingParamStr = 'Missing parameter';
 
 	// app id
-	LYUAppId = [NSBundle mainBundle].bundleIdentifier;
+	AssinAppId = [NSBundle mainBundle].bundleIdentifier;
 
 	// mainBundlePath
-	LYUAppPath = [NSBundle mainBundle].bundlePath;
+	AssinAppPath = [NSBundle mainBundle].bundlePath;
 
 	// document path
-	LYUDocPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+	AssinDocPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 
 	// caches path
-	LYUCachesPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0]; 
+	AssinCachesPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0]; 
 
 	// 加载系统动态库
-	LYULoadFramework = function(name) {
+	AssinLoadFramework = function(name) {
 		var head = "/System/Library/";
 		var foot = "Frameworks/" + name + ".framework";
 		var bundle = [NSBundle bundleWithPath:head + foot] || [NSBundle bundleWithPath:head + "Private" + foot];
@@ -24,29 +24,29 @@
 	};
 
 	// keyWindow
-	LYUKeyWin = function() {
+	AssinKeyWin = function() {
 		return UIApp.keyWindow;
 	};
 
 	// 根控制器
-	LYURootVc =  function() {
+	AssinRootVc =  function() {
 		return UIApp.keyWindow.rootViewController;
 	};
 
 	// 找到显示在最前面的控制器
-	var _LYUFrontVc = function(vc) {
+	var _AssinFrontVc = function(vc) {
 		if (vc.presentedViewController) {
-        	return _LYUFrontVc(vc.presentedViewController);
+        	return _AssinFrontVc(vc.presentedViewController);
 	    }else if ([vc isKindOfClass:[UITabBarController class]]) {
-	        return _LYUFrontVc(vc.selectedViewController);
+	        return _AssinFrontVc(vc.selectedViewController);
 	    } else if ([vc isKindOfClass:[UINavigationController class]]) {
-	        return _LYUFrontVc(vc.visibleViewController);
+	        return _AssinFrontVc(vc.visibleViewController);
 	    } else {
 	    	var count = vc.childViewControllers.count;
     		for (var i = count - 1; i >= 0; i--) {
     			var childVc = vc.childViewControllers[i];
     			if (childVc && childVc.view.window) {
-    				vc = _LYUFrontVc(childVc);
+    				vc = _AssinFrontVc(childVc);
     				break;
     			}
     		}
@@ -54,23 +54,23 @@
     	}
 	};
 
-	LYUFrontVc = function() {
-		return _LYUFrontVc(UIApp.keyWindow.rootViewController);
+	AssinFrontVc = function() {
+		return _AssinFrontVc(UIApp.keyWindow.rootViewController);
 	};
 
 	// 递归打印UIViewController view的层级结构
-	LYUVcSubviews = function(vc) { 
+	AssinVcSubviews = function(vc) { 
 		if (![vc isKindOfClass:[UIViewController class]]) throw new Error(invalidParamStr);
 		return vc.view.recursiveDescription().toString(); 
 	};
 
 	// 递归打印最上层UIViewController view的层级结构
-	LYUFrontVcSubViews = function() {
-		return LYUVcSubviews(_LYUFrontVc(UIApp.keyWindow.rootViewController));
+	AssinFrontVcSubViews = function() {
+		return AssinVcSubviews(_AssinFrontVc(UIApp.keyWindow.rootViewController));
 	};
 
 	// 获取按钮绑定的所有TouchUpInside事件的方法名
-	LYUBtnTouchUpEvent = function(btn) { 
+	AssinBtnTouchUpEvent = function(btn) { 
 		var events = [];
 		var allTargets = btn.allTargets().allObjects()
 		var count = allTargets.count;
@@ -84,20 +84,20 @@
 	};
 
 	// CG函数
-	LYUPointMake = function(x, y) { 
+	AssinPointMake = function(x, y) { 
 		return {0 : x, 1 : y}; 
 	};
 
-	LYUSizeMake = function(w, h) { 
+	AssinSizeMake = function(w, h) { 
 		return {0 : w, 1 : h}; 
 	};
 
-	LYURectMake = function(x, y, w, h) { 
-		return {0 : LYUPointMake(x, y), 1 : LYUSizeMake(w, h)}; 
+	AssinRectMake = function(x, y, w, h) { 
+		return {0 : AssinPointMake(x, y), 1 : AssinSizeMake(w, h)}; 
 	};
 
 	// 递归打印controller的层级结构
-	LYUChildVcs = function(vc) {
+	AssinChildVcs = function(vc) {
 		if (![vc isKindOfClass:[UIViewController class]]) throw new Error(invalidParamStr);
 		return [vc _printHierarchy].toString();
 	};
@@ -106,29 +106,29 @@
 
 
 	// 递归打印view的层级结构
-	LYUSubviews = function(view) { 
+	AssinSubviews = function(view) { 
 		if (![view isKindOfClass:[UIView class]]) throw new Error(invalidParamStr);
 		return view.recursiveDescription().toString(); 
 	};
 
 	// 判断是否为字符串 "str" @"str"
-	LYUIsString = function(str) {
+	AssinIsString = function(str) {
 		return typeof str == 'string' || str instanceof String;
 	};
 
 	// 判断是否为数组 []、@[]
-	LYUIsArray = function(arr) {
+	AssinIsArray = function(arr) {
 		return arr instanceof Array;
 	};
 
 	// 判断是否为数字 666 @666
-	LYUIsNumber = function(num) {
+	AssinIsNumber = function(num) {
 		return typeof num == 'number' || num instanceof Number;
 	};
 
-	var _LYUClass = function(className) {
+	var _AssinClass = function(className) {
 		if (!className) throw new Error(missingParamStr);
-		if (LYUIsString(className)) {
+		if (AssinIsString(className)) {
 			return NSClassFromString(className);
 		} 
 		if (!className) throw new Error(invalidParamStr);
@@ -137,8 +137,8 @@
 	};
 
 	// 打印所有的子类
-	LYUSubclasses = function(className, reg) {
-		className = _LYUClass(className);
+	AssinSubclasses = function(className, reg) {
+		className = _AssinClass(className);
 
 		return [c for each (c in ObjectiveC.classes) 
 		if (c != className 
@@ -149,8 +149,8 @@
 	};
 
 	// 打印所有的方法
-	var _LYUGetMethods = function(className, reg, clazz) {
-		className = _LYUClass(className);
+	var _AssinGetMethods = function(className, reg, clazz) {
+		className = _AssinClass(className);
 
 		var count = new new Type('I');
 		var classObj = clazz ? className.constructor : className;
@@ -172,37 +172,37 @@
 		return [methodsArray, methodNamesArray];
 	};
 
-	var _LYUMethods = function(className, reg, clazz) {
-		return _LYUGetMethods(className, reg, clazz)[0];
+	var _AssinMethods = function(className, reg, clazz) {
+		return _AssinGetMethods(className, reg, clazz)[0];
 	};
 
 	// 打印所有的方法名字
-	var _LYUMethodNames = function(className, reg, clazz) {
-		return _LYUGetMethods(className, reg, clazz)[1];
+	var _AssinMethodNames = function(className, reg, clazz) {
+		return _AssinGetMethods(className, reg, clazz)[1];
 	};
 
 	// 打印所有的对象方法
-	LYUInstanceMethods = function(className, reg) {
-		return _LYUMethods(className, reg);
+	AssinInstanceMethods = function(className, reg) {
+		return _AssinMethods(className, reg);
 	};
 
 	// 打印所有的对象方法名字
-	LYUInstanceMethodNames = function(className, reg) {
-		return _LYUMethodNames(className, reg);
+	AssinInstanceMethodNames = function(className, reg) {
+		return _AssinMethodNames(className, reg);
 	};
 
 	// 打印所有的类方法
-	LYUClassMethods = function(className, reg) {
-		return _LYUMethods(className, reg, true);
+	AssinClassMethods = function(className, reg) {
+		return _AssinMethods(className, reg, true);
 	};
 
 	// 打印所有的类方法名字
-	LYUClassMethodNames = function(className, reg) {
-		return _LYUMethodNames(className, reg, true);
+	AssinClassMethodNames = function(className, reg) {
+		return _AssinMethodNames(className, reg, true);
 	};
 
 	// 打印所有的成员变量
-	LYUIvars = function(obj, reg){ 
+	AssinIvars = function(obj, reg){ 
 		if (!obj) throw new Error(missingParamStr);
 		var x = {}; 
 		for(var i in *obj) { 
@@ -216,7 +216,7 @@
 	};
 
 	// 打印所有的成员变量名字
-	LYUIvarNames = function(obj, reg) {
+	AssinIvarNames = function(obj, reg) {
 		if (!obj) throw new Error(missingParamStr);
 		var array = [];
 		for(var name in *obj) { 
